@@ -277,6 +277,8 @@ var httpOutputDefaults = map[string]map[string]any{
 		"APIToken":          "",
 		"PolicyID":          uint64(0),
 		"PolicyDisplayName": "Runtime Events",
+		"ExtraTags":         []string{"falcosidekick"},
+		"ExtraLabels":       map[string]string{},
 		"MinimumPriority":   "",
 	},
 }
@@ -480,6 +482,7 @@ func getConfig() *types.Configuration {
 			Metrics: otlpmetrics.Config{ExtraEnvVars: make(map[string]string)},
 		},
 		Splunk: types.SplunkOutputConfig{CustomHeaders: make(map[string]string)},
+		Sysdig: types.SysdigOutputConfig{ExtraLabels: make(map[string]string)},
 	}
 
 	configFile := kingpin.Flag("config-file", "config file").Short('c').ExistingFile()
@@ -667,6 +670,8 @@ func getConfig() *types.Configuration {
 	v.GetStringMapString("OTLP.Traces.ExtraEnvVars")
 	v.GetStringMapString("OTLP.Metrics.ExtraEnvVars")
 	v.GetStringMapString("Splunk.CustomHeaders")
+	v.GetStringMapString("Sysdig.ExtraLabels")
+	v.GetStringSlice("Sysdig.ExtraTags")
 
 	c.Elasticsearch.CustomHeaders = v.GetStringMapString("Elasticsearch.CustomHeaders")
 
@@ -740,6 +745,20 @@ func getConfig() *types.Configuration {
 			tagkeys := strings.Split(label, ":")
 			if len(tagkeys) == 2 {
 				c.Splunk.CustomHeaders[tagkeys[0]] = tagkeys[1]
+			}
+		}
+	}
+
+	if value, present := os.LookupEnv("SYSDIG_EXTRATAGS"); present {
+		c.Sysdig.ExtraTags = strings.Split(strings.ReplaceAll(value, " ", ""), ",")
+	}
+
+	if value, present := os.LookupEnv("SYSDIG_EXTRALABELS"); present {
+		for _, kv := range strings.Split(value, ",") {
+			k, val, ok := strings.Cut(kv, ":")
+			k, val = strings.TrimSpace(k), strings.TrimSpace(val)
+			if ok && k != "" {
+				c.Sysdig.ExtraLabels[k] = val
 			}
 		}
 	}

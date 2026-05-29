@@ -57,8 +57,12 @@ func newSysdigPayload(falcopayload types.FalcoPayload, config *types.Configurati
 		displayName = defaultPolicyDisplayName
 	}
 
+	tags := append([]string{}, falcopayload.Tags...)
+	tags = append(tags, config.Sysdig.ExtraTags...)
+
 	return sysdigBatch{
-		Time: tsStr,
+		Time:   tsStr,
+		Labels: config.Sysdig.ExtraLabels,
 		Events: []sysdigEvent{
 			{
 				UUID:         falcopayload.UUID,
@@ -69,7 +73,7 @@ func newSysdigPayload(falcopayload types.FalcoPayload, config *types.Configurati
 				Output:       falcopayload.Output,
 				PolicyID:     config.Sysdig.PolicyID,
 				Source:       falcopayload.Source,
-				Tags:         falcopayload.Tags,
+				Tags:         tags,
 				OutputFields: falcopayload.OutputFields,
 			},
 		},

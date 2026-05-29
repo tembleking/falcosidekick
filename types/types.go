@@ -499,6 +499,8 @@ type SysdigOutputConfig struct {
 	APIToken          string
 	PolicyID          uint64
 	PolicyDisplayName string
+	ExtraTags         []string
+	ExtraLabels       map[string]string
 	MinimumPriority   string
 }
 
