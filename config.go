@@ -272,6 +272,12 @@ var httpOutputDefaults = map[string]map[string]any{
 		"MinimumPriority": "",
 		"Token":           "",
 	},
+	"Sysdig": {
+		"Host":            "",
+		"APIToken":        "",
+		"PolicyID":        uint64(0),
+		"MinimumPriority": "",
+	},
 }
 
 // Other output defaults that do not need commonHttpOutputDefaults
@@ -992,6 +998,7 @@ func getConfig() *types.Configuration {
 	c.Talon.MinimumPriority = checkPriority(c.Talon.MinimumPriority)
 	c.Logstash.MinimumPriority = checkPriority(c.Logstash.MinimumPriority)
 	c.Splunk.MinimumPriority = checkPriority(c.Splunk.MinimumPriority)
+	c.Sysdig.MinimumPriority = checkPriority(c.Sysdig.MinimumPriority)
 
 	c.Slack.MessageFormatTemplate = getMessageFormatTemplate("Slack", c.Slack.MessageFormat)
 	c.Rocketchat.MessageFormatTemplate = getMessageFormatTemplate("Rocketchat", c.Rocketchat.MessageFormat)

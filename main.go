@@ -84,6 +84,7 @@ var (
 	talonClient         *outputs.Client
 	logstashClient      *outputs.Client
 	splunkClient        *outputs.Client
+	sysdigClient        *outputs.Client
 
 	statsdClient, dogstatsdClient *statsd.Client
 	config                        *types.Configuration
@@ -892,6 +893,20 @@ func init() {
 			config.Splunk.Host = ""
 		} else {
 			outputs.EnabledOutputs = append(outputs.EnabledOutputs, "Splunk")
+		}
+	}
+
+	if config.Sysdig.APIToken != "" && config.Sysdig.Host != "" {
+		var err error
+		endpointUrl := config.Sysdig.Host + outputs.SysdigPath
+		sysdigClient, err = outputs.NewClient("Sysdig", endpointUrl, config.Sysdig.CommonConfig, *initClientArgs)
+		if err != nil {
+			config.Sysdig.APIToken = ""
+		} else {
+			if config.Sysdig.PolicyID == 0 {
+				utils.Log(utils.WarningLvl, "Sysdig", "PolicyID is 0; backend silently drops events without a valid policy")
+			}
+			outputs.EnabledOutputs = append(outputs.EnabledOutputs, "Sysdig")
 		}
 	}
 

@@ -411,6 +411,10 @@ func forwardEvent(falcopayload types.FalcoPayload) {
 		go splunkClient.Send(falcopayload)
 	}
 
+	if config.Sysdig.APIToken != "" && (falcopayload.Priority >= types.Priority(config.Sysdig.MinimumPriority) || falcopayload.Rule == testRule) {
+		go sysdigClient.SysdigPost(falcopayload)
+	}
+
 	if config.NodeRed.Address != "" && (falcopayload.Priority >= types.Priority(config.NodeRed.MinimumPriority) || falcopayload.Rule == testRule) {
 		go noderedClient.NodeRedPost(falcopayload)
 	}

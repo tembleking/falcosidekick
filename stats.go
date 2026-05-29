@@ -93,6 +93,7 @@ func getInitStats() *types.Statistics {
 		Talon:             getOutputNewMap("talon"),
 		Logstash:          getOutputNewMap("logstash"),
 		Splunk:            getOutputNewMap("splunk"),
+		Sysdig:            getOutputNewMap("sysdig"),
 		GCPChronicle:      getOutputNewMap("gcpchronicle"),
 	}
 	stats.Falco.Add(outputs.Emergency, 0)

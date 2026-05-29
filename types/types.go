@@ -122,6 +122,7 @@ type Configuration struct {
 	Talon              TalonOutputConfig
 	Logstash           LogstashConfig
 	Splunk             SplunkOutputConfig
+	Sysdig             SysdigOutputConfig
 }
 
 // InitClientArgs represent a client parameters for initialization
@@ -486,6 +487,17 @@ type SplunkOutputConfig struct {
 	Host            string
 	CustomHeaders   map[string]string
 	Token           string
+	MinimumPriority string
+}
+
+// SysdigOutputConfig represents parameters for Sysdig Secure events ingest API.
+// The endpoint and JSON shape mirror the cloud-connector contract
+// (POST /api/v1/eventsDispatch/ingest, snake_case keys).
+type SysdigOutputConfig struct {
+	CommonConfig    `mapstructure:",squash"`
+	Host            string
+	APIToken        string
+	PolicyID        uint64
 	MinimumPriority string
 }
 
@@ -951,6 +963,7 @@ type Statistics struct {
 	Talon             *expvar.Map
 	Logstash          *expvar.Map
 	Splunk            *expvar.Map
+	Sysdig            *expvar.Map
 	GCPChronicle      *expvar.Map
 }
 
