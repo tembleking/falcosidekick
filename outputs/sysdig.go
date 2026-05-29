@@ -41,6 +41,10 @@ type sysdigBatch struct {
 	Events []sysdigEvent     `json:"events"`
 }
 
+// defaultPolicyDisplayName is used as the event Name (shown as "Policy" in the
+// Sysdig UI) when no PolicyDisplayName is configured.
+const defaultPolicyDisplayName = "Runtime Events"
+
 func newSysdigPayload(falcopayload types.FalcoPayload, config *types.Configuration) sysdigBatch {
 	ts := falcopayload.Time
 	if ts.IsZero() {
@@ -48,13 +52,18 @@ func newSysdigPayload(falcopayload types.FalcoPayload, config *types.Configurati
 	}
 	tsStr := ts.UTC().Format(time.RFC3339Nano)
 
+	displayName := config.Sysdig.PolicyDisplayName
+	if displayName == "" {
+		displayName = defaultPolicyDisplayName
+	}
+
 	return sysdigBatch{
 		Time: tsStr,
 		Events: []sysdigEvent{
 			{
 				UUID:         falcopayload.UUID,
 				Timestamp:    tsStr,
-				Name:         falcopayload.Rule,
+				Name:         displayName,
 				Rule:         falcopayload.Rule,
 				Priority:     strings.ToLower(falcopayload.Priority.String()),
 				Output:       falcopayload.Output,

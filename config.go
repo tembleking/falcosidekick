@@ -273,10 +273,11 @@ var httpOutputDefaults = map[string]map[string]any{
 		"Token":           "",
 	},
 	"Sysdig": {
-		"Host":            "",
-		"APIToken":        "",
-		"PolicyID":        uint64(0),
-		"MinimumPriority": "",
+		"Host":              "",
+		"APIToken":          "",
+		"PolicyID":          uint64(0),
+		"PolicyDisplayName": "Runtime Events",
+		"MinimumPriority":   "",
 	},
 }
 

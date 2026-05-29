@@ -494,11 +494,12 @@ type SplunkOutputConfig struct {
 // The endpoint and JSON shape mirror the cloud-connector contract
 // (POST /api/v1/eventsDispatch/ingest, snake_case keys).
 type SysdigOutputConfig struct {
-	CommonConfig    `mapstructure:",squash"`
-	Host            string
-	APIToken        string
-	PolicyID        uint64
-	MinimumPriority string
+	CommonConfig      `mapstructure:",squash"`
+	Host              string
+	APIToken          string
+	PolicyID          uint64
+	PolicyDisplayName string
+	MinimumPriority   string
 }
 
 // NodeRedOutputConfig represents parameters for Node-RED
